@@ -2,7 +2,7 @@ npapi headers
 =============
 
 Netscape Plugin Application Programming Interface (NPAPI) is a cross-platform plugin architecture used
-by ises-project and WebKit. These headers have been modified from the original ones found in WebKit.
+by isis-project and WebKit. These headers have been modified from the original ones found in WebKit.
 
 License
 -------
