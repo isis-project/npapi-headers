@@ -1,0 +1,5 @@
+npapiheaders (1.0.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Anupam <anupam.kaul@palm.com>  Mon, 12 Mar 2012 19:44:22 -0700

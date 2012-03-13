@@ -1,0 +1,11 @@
+Package: npapiheaders
+Version: 1.0.0-1
+Architecture: amd64
+Maintainer: Anupam <anupam.kaul@palm.com>
+Installed-Size: 40
+Section: webOS
+Priority: extra
+Homepage: https://github.com/isis-project/npapi-headers
+Description: NPAPI headers for ISIS browser
+ NPAPI is a cross-platform architecture used by isis-project and Webkit.
+ These headers have been modified from the original ones found in WebKit.

@@ -1,0 +1,17 @@
+Source: npapiheaders
+Section: webOS
+Priority: extra
+Maintainer: Anupam <anupam.kaul@palm.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: https://github.com/isis-project/npapi-headers
+#Vcs-Git: git://git.debian.org/collab-maint/npapiheaders.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/npapiheaders.git;a=summary
+
+Package: npapiheaders
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: NPAPI headers for ISIS browser
+ NPAPI is a cross-platform architecture used by isis-project and Webkit.
+ These headers have been modified from the original ones found in WebKit.
+

@@ -1,4 +1,5 @@
 
+LUNA_STAGING = $(HOME)/ISIS_OUT
 LUNA_STAGING_INC = $(LUNA_STAGING)/include
 
 default: stage
