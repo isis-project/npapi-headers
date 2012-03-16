@@ -1,5 +1,5 @@
 
-LUNA_STAGING = $(HOME)/ISIS_OUT
+LUNA_STAGING ?= $(HOME)/ISIS_OUT
 LUNA_STAGING_INC = $(LUNA_STAGING)/include
 
 default: stage
@@ -23,6 +23,9 @@ stage: $(LUNA_STAGING_INC)/webkit/npapi/npapi.h \
 	$(LUNA_STAGING_INC)/webkit/npapi/npruntime.h \
 	$(LUNA_STAGING_INC)/webkit/npapi/nptypes.h \
 	$(LUNA_STAGING_INC)/webkit/npapi/npupp.h
+
+.PHONY: install
+install:
 
 .PHONY: clean
 clean:
