@@ -7,7 +7,28 @@
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export DH_VERBOSE=1
+export DEB_STAGING_INCDIR=debian/npapiheaders/usr/include
 
 %:
 	dh $@ 
+
+.PHONY: override_dh_auto_build override_dh_auto_test override_dh_install
+
+override_dh_auto_build:
+
+override_dh_auto_test:
+
+override_dh_auto_clean:
+
+override_dh_install:
+
+override_dh_auto_install:
+
+override_dh_installdirs:
+	install -d debian/pbnjson
+	mkdir -p $(DEB_STAGING_INCDIR)
+	install -m 444 *.h $(DEB_STAGING_INCDIR)
+
+#override_dh_clean:
+

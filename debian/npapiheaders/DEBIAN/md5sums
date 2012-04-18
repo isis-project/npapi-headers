@@ -1,3 +1,7 @@
+22aa32254ca41504fc969c681b5c0e6f  usr/include/npapi.h
+e9da6dc1316e45cd89d370c1d6831fd9  usr/include/npruntime.h
+71ac9c6f8588937428c6cc128eb5a37c  usr/include/nptypes.h
+6a355f2b1e6a03e774ae98fd9e887758  usr/include/npupp.h
 884f31cac3567ca25d2864a1a32bad36  usr/share/doc/npapiheaders/README.Debian
 9ce62e8ce49920968628e9ff12d3e507  usr/share/doc/npapiheaders/README.md
 25cb3ce7b542ba6c9973d33de2383771  usr/share/doc/npapiheaders/changelog.Debian.gz

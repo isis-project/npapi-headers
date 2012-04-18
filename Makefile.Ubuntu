@@ -24,6 +24,9 @@ stage: $(LUNA_STAGING_INC)/webkit/npapi/npapi.h \
 	$(LUNA_STAGING_INC)/webkit/npapi/nptypes.h \
 	$(LUNA_STAGING_INC)/webkit/npapi/npupp.h
 
+deb:
+	dpkg-buildpackage -rfakeroot
+
 .PHONY: install
 install:
 

@@ -2,7 +2,7 @@ Package: npapiheaders
 Version: 1.0.0-1
 Architecture: amd64
 Maintainer: Anupam <anupam.kaul@palm.com>
-Installed-Size: 40
+Installed-Size: 132
 Section: webOS
 Priority: extra
 Homepage: https://github.com/isis-project/npapi-headers
