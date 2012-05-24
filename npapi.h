@@ -58,7 +58,7 @@
 #define JRIEnv  void
 #endif
 
-#if defined(_WIN32) && !defined(__SYMBIAN32__)
+#ifdef _WIN32
 #include <windows.h>
 #ifndef XP_WIN
 #define XP_WIN 1
@@ -91,16 +91,11 @@
 #endif
 
 #if defined(XP_UNIX)
-# if !defined(XP_WEBOS)
+#include <stdio.h>
+#if defined(MOZ_X11) || !defined(XP_WEBOS)
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-# endif
-#include <stdio.h>
 #endif
-
-#if defined(XP_SYMBIAN)
-#include <QEvent>
-#include <QRegion>
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -240,8 +235,7 @@ typedef struct _NPSize
   int32_t height;
 } NPSize;
 
-typedef enum
-{
+typedef enum {
   NPFocusNext = 0,
   NPFocusPrevious = 1
 } NPFocusDirection;
@@ -276,10 +270,12 @@ typedef struct
 typedef struct
 {
   int32_t      type;
+#if defined(MOZ_X11)
   Display*     display;
   Visual*      visual;
   Colormap     colormap;
   unsigned int depth;
+#endif
 } NPSetWindowCallbackStruct;
 # endif
 
@@ -409,33 +405,34 @@ typedef enum {
 
   , npPalmEventLoopValue = 10000
 
-  /**
-   * Used for the plugin to inform WebKit that it wants to be cached which means
-   * it won't be deleted as it would normally be during significant style changes
-   * (like hiding the parent div element). The return value is ignored if the
-   * object element specifies the 'x-palm-cache-plugin' true/false attribute.
-   */
+    /**
+     * Used for the plugin to inform WebKit that it wants to be cached which means
+     * it won't be deleted as it would normally be during significant style changes
+     * (like hiding the parent div element). The return value is ignored if the
+     * object element specifies the 'x-palm-cache-plugin' true/false attribute.
+     */
   , npPalmCachePluginValue = 10001
 
-  /** Used to determine the application identifer in the context of which this plugin is created */
-  , npPalmApplicationIdentifier = 10002
-
-  /**
-   * Used for plugins that draw with PGContext. The raster pointer in a draw event
-   * is then passed in as null, and we're able to draw direct-to-screen.
-   */
+    /**
+     * Used for plugins that draw with PGContext. The raster pointer in a draw event
+     * is then passed in as null, and we're able to draw direct-to-screen.
+     */
   , npPalmUseGraphicsContext = 10003
 
-  /** Used to request that WebKit send or stop ending TouchEvents to the plugin */
+    /**
+     * Used to request that WebKit send or stop ending TouchEvents to the plugin
+     */
   , npPalmEnableTouchEvents = 10004
 
-  /** Used to indicate that plugin is interactive and should get mouse events (e.g., Flash) */
+    /**
+     * Used to indicate that plugin is interactive and should get mouse
+     * events (e.g., flash)
+     */
   , npPalmIsInteractive = 10005
 
-  /** Plugin uses this to indicate when an input field is focused/defocused */
-  , npPalmInputFieldFocused = 10006
-
-  /** Used to determine the flash player scriptstucktimeout value - in seconds */ 
+    /**
+     * Used to determine the flash player scriptstucktimeout value - in seconds
+     */
   , npPalmScriptStuckTimeout = 10007
 #endif
 } NPPVariable;
@@ -470,6 +467,7 @@ typedef enum {
 #if defined(XP_MACOSX)
   /* Used for negotiating drawing models */
   , NPNVpluginDrawingModel = 1000
+  , NPNVcontentsScaleFactor = 1001
 #ifndef NP_NO_QUICKDRAW
   , NPNVsupportsQuickDrawBool = 2000
 #endif
@@ -480,6 +478,10 @@ typedef enum {
   , NPNVsupportsCarbonBool = 3000 /* TRUE if the browser supports the Carbon event model */
 #endif
   , NPNVsupportsCocoaBool = 3001 /* TRUE if the browser supports the Cocoa event model */
+  , NPNVsupportsUpdatedCocoaTextInputBool = 3002 /* TRUE if the browser supports the updated
+                                                    Cocoa text input specification. */
+  , NPNVsupportsCompositingCoreAnimationPluginsBool = 74656 /* TRUE if the browser supports
+                                                               CA model compositing */
 #endif /* XP_MACOSX */
 #if (defined(MOZ_PLATFORM_MAEMO) && (MOZ_PLATFORM_MAEMO >= 5)) || defined(XP_WEBOS)
   , NPNVSupportsWindowlessLocal = 2002
@@ -489,6 +491,19 @@ typedef enum {
   , NPNVpluginDrawingModel = 1000
   , NPNVsupportsPixmapDrawingBool = 2003
   , NPNVsupportsQtDrawingBool = 2004
+
+  /**
+   * Used to determine the application identifer in the context of which this
+   * plugin is created
+   */
+  , npPalmApplicationIdentifier = 2005
+  /**
+   * Plugin uses this to indicate when an input field is
+   * focused/defocused
+   */
+  , npPalmInputFieldFocused = 2006
+
+
 #endif
 } NPNVariable;
 
@@ -576,8 +591,6 @@ typedef EventRecord NPEvent;
 #else
 typedef void*  NPEvent;
 #endif
-#elif defined(XP_SYMBIAN)
-typedef QEvent NPEvent;
 #elif defined(XP_WIN)
 typedef struct _NPEvent
 {
@@ -592,8 +605,7 @@ typedef struct _NPEvent
   uint32_t wParam;
   uint32_t lParam;
 } NPEvent;
-#elif defined(XP_UNIX)
-#if defined(XP_WEBOS)
+#elif defined(XP_UNIX) && (defined(MOZ_X11) || defined(XP_WEBOS))
 typedef enum NpPalmEventsEnum
 {
   npPalmNullEvent,
@@ -660,17 +672,10 @@ typedef struct NpPalmTouchPoint
   int32_t xCoord, yCoord;
 } NpPalmTouchPoint;
 
-typedef struct NpPalmTouchList
-{
-  NpPalmTouchPoint* points;
-  int32_t length;
-} NpPalmTouchList;
-
 typedef struct NpPalmTouchEvent
 {
-  NpPalmTouchList touches;
-  NpPalmTouchList targetTouches;
-  NpPalmTouchList changedTouches;
+  int32_t touchCount;
+  NpPalmTouchPoint* touches;
   int32_t modifiers;
 } NpPalmTouchEvent;
 
@@ -750,9 +755,6 @@ typedef struct NPEvent
 
 } NPEvent;
 #else
-typedef XEvent NPEvent;
-#endif
-#else
 typedef void*  NPEvent;
 #endif
 
@@ -766,10 +768,8 @@ typedef CGPathRef NPCGRegion;
 typedef HRGN NPRegion;
 #elif defined(XP_WEBOS)
 typedef void *NPRegion;
-#elif defined(XP_UNIX)
+#elif defined(XP_UNIX) && defined(MOZ_X11)
 typedef Region NPRegion;
-#elif defined(XP_SYMBIAN)
-typedef QRegion* NPRegion;
 #else
 typedef void *NPRegion;
 #endif
@@ -1019,7 +1019,7 @@ extern "C" {
 /* NPP_* functions are provided by the plugin and called by the navigator. */
 
 #if defined(XP_UNIX)
-char* NPP_GetMIMEDescription(void);
+const char* NPP_GetMIMEDescription(void);
 #endif
 
 NPError NP_LOADDS NPP_Initialize(void);
